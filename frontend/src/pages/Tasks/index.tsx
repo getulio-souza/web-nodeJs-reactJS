@@ -30,6 +30,14 @@ const Tasks: React.FC = () => {
     navigate("/tarefas/cadastro")
   }
 
+  function editTask(id: number) {
+    navigate(`/tarefas/cadastro/${id}`)
+  }
+
+  function viewTask(id: number) {
+    navigate(`/tarefas/${id}`)
+  }
+
   async function loadTasks() {
     const response = await api.get("/tasks");
     console.log(response.data);
@@ -63,9 +71,9 @@ const Tasks: React.FC = () => {
               <td>{formatDate(task.updated_at)}</td>
               <td>{task.finished ? "Finalizado" : "Pendente"}</td>
               <td>
-                <Button size="sm" variant="primary" className="me-1">Editar</Button>
+                <Button size="sm" variant="primary" className="me-1" onClick={()=> editTask(task.id)}>Editar</Button>
                 <Button size="sm" variant="success" className="me-1">Finalizar</Button>
-                <Button size="sm" variant="warning" className="me-1">Visualizar</Button>
+                <Button size="sm" variant="warning" className="me-1" onClick={()=> viewTask(task.id)}>Visualizar</Button>
                 <Button size="sm" variant="danger" className="me-1">Remover</Button>
               </td>
             </tr>
