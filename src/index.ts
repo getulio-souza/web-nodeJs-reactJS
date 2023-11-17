@@ -1,11 +1,9 @@
 import 'reflect-metadata';
-// import * as express from 'express';
+import express from 'express';
 import * as bodyParser from 'body-parser';
 import { AppDataSource } from './data-source';
 import routes from './routes';
-// import * as cors from 'cors';
-var cors = require('cors')
-var express = require('express')
+import cors from 'cors';
 
 //comunicacao com o banco de dados
 AppDataSource.initialize().then(async () => {
