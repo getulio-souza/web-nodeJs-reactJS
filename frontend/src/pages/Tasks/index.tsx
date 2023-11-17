@@ -5,7 +5,7 @@ import api from "../../services/api";
 import moment from "moment";
 import '../Tasks/index.css'
 
-interface ITask {
+export interface ITask {
   id: number;
   title: string;
   description: string;
@@ -44,6 +44,16 @@ const Tasks: React.FC = () => {
     setTasks(response.data);
   }
 
+  async function finishedTask(id: number) {
+    await api.patch(`/tasks/${id}`)
+    loadTasks();
+  }
+
+  async function deleteTask(id: number) {
+    await api.delete(`/tasks/${id}`);
+    loadTasks();
+  }
+
   return (
     <div className="container" style={{maxWidth: '820px'}}>
       <div className="task-header">
@@ -71,10 +81,10 @@ const Tasks: React.FC = () => {
               <td>{formatDate(task.updated_at)}</td>
               <td>{task.finished ? "Finalizado" : "Pendente"}</td>
               <td>
-                <Button size="sm" variant="primary" className="me-1" onClick={()=> editTask(task.id)}>Editar</Button>
-                <Button size="sm" variant="success" className="me-1">Finalizar</Button>
+                <Button size="sm" disabled={task.finished} variant="primary" className="me-1" onClick={()=> editTask(task.id)}>Editar</Button>
+                <Button size="sm" variant="success" className="me-1" onClick={()=> finishedTask(task.id)}>Finalizar</Button>
                 <Button size="sm" variant="warning" className="me-1" onClick={()=> viewTask(task.id)}>Visualizar</Button>
-                <Button size="sm" variant="danger" className="me-1">Remover</Button>
+                <Button size="sm" disabled={task.finished} variant="danger" className="me-1" onClick={()=> deleteTask(task.id)}>Remover</Button>
               </td>
             </tr>
           ))}

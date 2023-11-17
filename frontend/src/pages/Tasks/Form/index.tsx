@@ -4,9 +4,9 @@ import { Button, Form as BootstrapForm } from 'react-bootstrap';
 import api from '../../../services/api';
 import './index.css'
 
-interface ITask {
-  title: string;
-  description: string;
+interface ITask{
+    title: string;
+    description: string;
 }
 
 //componente que sera exibido para o usuario
@@ -19,38 +19,38 @@ const Form: React.FC = () => {
   })
 
   const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
 
-  useEffect(() => {
-    findTask()
-  }, [id])
+  // useEffect(() => {
+  //   findTask()
+  // }, [id])
 
-  function updateModel(event: ChangeEvent<HTMLInputElement>) {
+  function updateModel(e: ChangeEvent<HTMLInputElement>) {
     setModel({
       ...model,
-      [event.target.name]: event.target.value
+      [e.target.name]: e.target.value,
     })
   }
 
-  function callBackend() {
+  function back() {
     navigate(-1)
   }
 
   async function onSubmit (e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault()
-    const response = await api.post("/tasks", model)
-    callBackend()
     console.log(model)
+    const response = await api.post("/tasks", model)
+    console.log(response)
+    // back()
   }
 
-  //carregando dados de uma tarefa existente
-  async function findTask(id?: number) {
-    const response = await api.get(`/tasks/${id}`)
-    setModel({
-      title: response.data.title,
-      description: response.data.description
-    })
-  }
+  // async function findTask(id?: number) {
+  //   const response = await api.get(`/tasks/${id}`)
+  //   setModel({
+  //     title: response.data.tile,
+  //     description: response.data.description
+  //   })
+  // }
 
   return (
     <div className='container'>
@@ -59,7 +59,7 @@ const Form: React.FC = () => {
         <Button
           variant='dark'
           size='sm'
-          onClick={callBackend}
+          onClick={back}
         >
           Voltar
         </Button>
@@ -67,13 +67,31 @@ const Form: React.FC = () => {
       <BootstrapForm onSubmit={onSubmit}>
         <BootstrapForm.Group>
           <BootstrapForm.Label>Titulo</BootstrapForm.Label>
-          <BootstrapForm.Control type='text' name='title' onChange={(e: ChangeEvent<HTMLInputElement>)=> updateModel(e)} />
+          <BootstrapForm.Control
+            type='text'
+            name='title'
+            value={model.title}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => updateModel(e)}
+          />
         </BootstrapForm.Group>
         <BootstrapForm.Group>
           <BootstrapForm.Label>Description</BootstrapForm.Label>
-          <BootstrapForm.Control type='text' name='description'/>
+          <BootstrapForm.Control
+            type='text'
+            name='description'
+            value={model.description}
+            onChange={(e: ChangeEvent<HTMLInputElement>)=> updateModel(e)}
+          />
         </BootstrapForm.Group>
-        <Button variant='dark' size='sm' type='submit' style={{marginTop:'10px'}}>Salvar</Button>
+        <Button
+          variant='dark'
+          size='sm'
+          type='submit'
+          style={{ marginTop: '10px' }}
+          onClick={back}
+        >
+          Salvar
+        </Button>
       </BootstrapForm>
     </div>
   )
