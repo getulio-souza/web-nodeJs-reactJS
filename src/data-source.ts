@@ -1,15 +1,25 @@
 import "reflect-metadata"
-import { DataSource } from "typeorm"
+import { DataSource, DataSourceOptions } from "typeorm"
 import { User } from "./entity/User"
 import { Tasks } from "./entity/Tasks"
+import "dotenv/config";
+
+const getBDConfig = (json: any) => {
+  const newObj = {}
+  for (const prop in json) {
+    if (!prop.startsWith("DB_")) {
+      continue;
+    }
+    const newProp = prop.substring(prop.indexOf("_") + 1).toLowerCase();
+    newObj[newProp] = json[prop]
+  }
+  return newObj
+}
+
+const config = getBDConfig(process.env) as DataSourceOptions
 
 export const AppDataSource = new DataSource({
-    type: "postgres",
-    host: "suleiman.db.elephantsql.com",
-    port: 5432,
-    username: "sqbxwtho",
-    password: "xSEV5g9oLioR6XGsCK5WucnjKI19G5EB",
-    database: "sqbxwtho",
+    ...config,
     synchronize: true,
     logging: false,
     entities: [User, Tasks],
